@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>George Adel — Software Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070707;--bg2:#0c0c0c;--bg3:#111;
+  --border:rgba(255,255,255,0.055);--border2:rgba(255,255,255,0.12);
+  --text:#e2e2e2;--muted:#444;--muted2:#777;--muted3:#999;
+  --gold:#c9aa71;--gold2:rgba(201,170,113,0.12);--gold3:rgba(201,170,113,0.04);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+::-webkit-scrollbar{width:2px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px}
+
+/* CURSOR */
+#cur{position:fixed;width:6px;height:6px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s}
+#cur-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(201,170,113,0.35);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s}
+body.hov #cur{width:14px;height:14px;mix-blend-mode:difference}
+body.hov #cur-ring{width:48px;height:48px;border-color:rgba(201,170,113,0.65)}
+
+/* LOADER */
+#loader{position:fixed;inset:0;background:var(--bg);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:36px;transition:opacity .8s,visibility .8s}
+#loader.gone{opacity:0;visibility:hidden;pointer-events:none}
+.ld-name{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,6vw,80px);font-weight:300;letter-spacing:.1em;overflow:hidden;display:flex}
+.ld-ch{display:inline-block;opacity:0;transform:translateY(100%);animation:ldChar .7s cubic-bezier(0.16,1,.3,1) forwards}
+.ld-dot{color:var(--gold)}
+.ld-bar-wrap{width:240px;height:1px;background:var(--border)}
+.ld-bar{height:100%;background:var(--gold);width:0;transition:width .35s cubic-bezier(0.4,0,.2,1)}
+.ld-txt{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted2)}
+@keyframes ldChar{to{opacity:1;transform:none}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:24px 64px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,backdrop-filter .4s}
+nav.sc{background:rgba(7,7,7,0.93);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;letter-spacing:.06em;color:var(--text);text-decoration:none}
+.nav-logo em{color:var(--gold);font-style:normal}
+.nav-links{display:flex;gap:40px;list-style:none}
+.nav-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);text-decoration:none;position:relative;transition:color .3s}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--gold);transition:width .35s}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{padding:9px 26px;border:1px solid var(--gold);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all .3s;position:relative;overflow:hidden}
+.nav-cta::before{content:'';position:absolute;inset:0;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .3s;z-index:-1}
+.nav-cta:hover{color:#070707}
+.nav-cta:hover::before{transform:scaleX(1)}
+
+/* PORTFOLIO VIEW */
+#pv{opacity:0;transition:opacity .6s}
+#pv.vis{opacity:1}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;padding:0 64px;position:relative;overflow:hidden}
+.hero-canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-glow{position:absolute;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(201,170,113,0.045) 0%,transparent 70%);right:-250px;top:50%;transform:translateY(-50%);animation:glowP 7s ease infinite}
+@keyframes glowP{0%,100%{opacity:.6;transform:translateY(-50%) scale(1)}50%{opacity:1;transform:translateY(-50%) scale(1.07)}}
+.hero-inner{position:relative;z-index:2;max-width:1000px}
+.hero-badge{display:inline-flex;align-items:center;gap:10px;padding:7px 18px;border:1px solid var(--border);background:var(--bg2);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);margin-bottom:40px;opacity:0;animation:fUp .8s .3s forwards}
+.bdot{width:6px;height:6px;border-radius:50%;background:#4caf82;animation:bdotA 2s ease infinite}
+@keyframes bdotA{0%,100%{box-shadow:0 0 0 0 rgba(76,175,130,0.5)}50%{box-shadow:0 0 0 6px rgba(76,175,130,0)}}
+.hero-name{font-family:'Cormorant Garamond',serif;font-size:clamp(72px,10vw,130px);font-weight:300;line-height:.9;letter-spacing:-.02em;opacity:0;animation:fUp .9s .45s forwards}
+.hero-name em{color:var(--gold);font-style:italic}
+.hero-role{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);margin-top:24px;opacity:0;animation:fUp .9s .6s forwards}
+.hero-role span{color:var(--gold)}
+.hero-bio{max-width:480px;font-size:15px;line-height:1.85;color:var(--muted3);margin-top:24px;opacity:0;animation:fUp .9s .75s forwards}
+.hero-btns{display:flex;gap:16px;margin-top:48px;flex-wrap:wrap;opacity:0;animation:fUp .9s .9s forwards}
+.btn-g{padding:14px 38px;border:1px solid var(--gold);background:transparent;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all .3s;position:relative;overflow:hidden;cursor:none}
+.btn-g::before{content:'';position:absolute;inset:0;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .3s;z-index:-1}
+.btn-g:hover{color:#070707}
+.btn-g:hover::before{transform:scaleX(1)}
+.btn-ghost{padding:14px 38px;border:1px solid var(--border);background:transparent;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted2);text-decoration:none;transition:all .3s;cursor:none}
+.btn-ghost:hover{border-color:var(--border2);color:var(--text)}
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fIn 1s 1.4s forwards}
+.hero-scroll span{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted)}
+.srod{width:1px;height:56px;background:linear-gradient(to bottom,var(--gold),transparent);animation:srodA 2s ease infinite}
+@keyframes srodA{0%{transform:scaleY(0);transform-origin:top}49%{transform:scaleY(1);transform-origin:top}50%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* SECTION */
+.sec{padding:120px 64px;position:relative;z-index:2}
+.sec-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:56px;display:flex;align-items:center;gap:18px}
+.sec-tag::after{content:'';flex:1;max-width:160px;height:1px;background:linear-gradient(to right,var(--border2),transparent)}
+.sec-h{font-family:'Cormorant Garamond',serif;font-size:clamp(44px,5.5vw,72px);font-weight:300;line-height:1.05;letter-spacing:-.015em}
+.sec-h em{color:var(--gold);font-style:italic}
+
+/* ABOUT */
+#about{background:var(--bg)}
+.about-wrap{display:grid;grid-template-columns:1.1fr 0.9fr;gap:96px;align-items:start;max-width:1200px}
+.atext{font-size:15px;line-height:1.9;color:var(--muted3);margin-bottom:18px}
+.astats{display:flex;gap:40px;margin-top:48px;flex-wrap:wrap}
+.astat{border-left:1px solid var(--gold);padding-left:20px}
+.astat-n{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:var(--text);line-height:1}
+.astat-n sub{font-size:24px;color:var(--gold)}
+.astat-l{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.skills-side{padding-top:72px}
+.sg{margin-bottom:32px}
+.sg-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted2);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{padding:6px 14px;border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.07em;color:var(--muted2);transition:all .3s;position:relative;overflow:hidden}
+.chip::before{content:'';position:absolute;inset:0;background:var(--gold3);opacity:0;transition:opacity .3s}
+.chip:hover{border-color:var(--gold);color:var(--gold)}
+.chip:hover::before{opacity:1}
+
+/* PROJECTS */
+#projects{background:var(--bg2)}
+.proj-intro{max-width:600px;margin-bottom:80px}
+.proj-intro p{font-size:15px;color:var(--muted2);line-height:1.8;margin-top:16px}
+.proj-list{display:flex;flex-direction:column;gap:2px}
+.proj-row{display:grid;grid-template-columns:80px 1fr auto;align-items:center;gap:32px;padding:36px 40px;border:1px solid var(--border);background:var(--bg);cursor:none;transition:border-color .4s;position:relative;overflow:hidden}
+.proj-row::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,var(--gold3),transparent);transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.proj-row:hover{border-color:rgba(201,170,113,0.22)}
+.proj-row:hover::before{transform:scaleX(1)}
+.proj-num{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:rgba(255,255,255,0.04);line-height:1;transition:color .4s;user-select:none}
+.proj-row:hover .proj-num{color:rgba(201,170,113,0.1)}
+.proj-type{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.proj-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--text);margin-bottom:8px;letter-spacing:-.01em}
+.proj-desc{font-size:13px;color:var(--muted2);line-height:1.7;max-width:580px}
+.proj-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.ptag{padding:3px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.06em;color:var(--muted)}
+.proj-action{display:flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted2);white-space:nowrap;transition:color .3s;cursor:none;background:none;border:none;padding:0}
+.proj-action .arr{transition:transform .3s;display:inline-block}
+.proj-row:hover .proj-action{color:var(--gold)}
+.proj-row:hover .arr{transform:translateX(6px)}
+
+/* CASE OVERLAY */
+#case-ov{position:fixed;inset:0;background:var(--bg);z-index:800;overflow-y:auto;opacity:0;visibility:hidden;transition:opacity .5s,visibility .5s}
+#case-ov.open{opacity:1;visibility:visible}
+.case-in{max-width:920px;margin:0 auto;padding:120px 48px 100px}
+.case-back{display:inline-flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);cursor:none;transition:color .3s;margin-bottom:64px;background:none;border:none;padding:0}
+.case-back:hover{color:var(--gold)}
+.case-htag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.case-title{font-family:'Cormorant Garamond',serif;font-size:clamp(48px,7vw,92px);font-weight:300;line-height:.93;letter-spacing:-.02em;margin-bottom:32px}
+.case-title em{color:var(--gold);font-style:italic}
+.case-meta{display:flex;gap:48px;margin-bottom:64px;padding-bottom:48px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.cm-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.cm-val{font-size:14px;color:var(--muted3)}
+.case-logo{display:flex;align-items:center;justify-content:center;background:var(--bg2);border:1px solid var(--border);padding:52px;margin-bottom:64px}
+.case-logo img{max-width:160px;max-height:160px;object-fit:contain;filter:invert(1) brightness(0.8)}
+.case-sh{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:var(--text);margin:48px 0 16px;letter-spacing:-.01em}
+.case-sh em{color:var(--gold);font-style:italic}
+.case-p{font-size:15px;line-height:1.9;color:var(--muted3);margin-bottom:16px}
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;margin:24px 0;background:var(--border)}
+.tech-cell{padding:18px 22px;background:var(--bg2)}
+.tech-layer{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.tech-val{font-size:13px;color:var(--muted3);line-height:1.6}
+.hl-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin:24px 0;background:var(--border)}
+.hl-cell{padding:30px;background:var(--bg2)}
+.hl-icon{font-size:22px;margin-bottom:12px}
+.hl-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:8px}
+.hl-desc{font-size:13px;color:var(--muted2);line-height:1.7}
+
+/* CONTACT */
+#contact{background:var(--bg)}
+.contact-h{font-family:'Cormorant Garamond',serif;font-size:clamp(52px,7vw,100px);font-weight:300;line-height:.93;letter-spacing:-.025em;margin-bottom:64px}
+.contact-h em{color:var(--gold);font-style:italic}
+.contact-list{border-top:1px solid var(--border)}
+.crow{display:flex;align-items:center;justify-content:space-between;padding:26px 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text);cursor:none;transition:padding-left .3s}
+.crow:hover{padding-left:20px}
+.crow-left{display:flex;align-items:center;gap:28px}
+.crow-platform{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);min-width:90px}
+.crow-val{font-size:14px;color:var(--muted3);transition:color .3s}
+.crow:hover .crow-val{color:var(--text)}
+.crow-arr{color:var(--muted);transition:all .3s;font-size:16px;display:inline-block}
+.crow:hover .crow-arr{color:var(--gold);transform:translateX(8px)}
+
+/* FOOTER */
+footer{padding:36px 64px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2}
+.footer-brand{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;color:var(--muted)}
+.footer-copy{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+
+/* DIVIDER */
+.div{height:1px;background:linear-gradient(to right,transparent,var(--border),transparent);position:relative;z-index:2}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .85s cubic-bezier(0.16,1,.3,1),transform .85s cubic-bezier(0.16,1,.3,1)}
+.reveal.vis{opacity:1;transform:none}
+
+/* KEYFRAMES */
+@keyframes fUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes fIn{from{opacity:0}to{opacity:1}}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  nav{padding:20px 28px}
+  .nav-links,.nav-cta{display:none}
+  .sec{padding:80px 28px}
+  #hero{padding:0 28px}
+  .about-wrap{grid-template-columns:1fr;gap:48px}
+  .skills-side{padding-top:0}
+  .proj-row{grid-template-columns:1fr;gap:16px;padding:28px}
+  .proj-num{display:none}
+  .case-in{padding:80px 24px 60px}
+  .hl-grid{grid-template-columns:1fr}
+  footer{padding:28px;flex-direction:column;gap:12px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-name" id="ldname"></div>
+  <div class="ld-bar-wrap"><div class="ld-bar" id="ldbar"></div></div>
+  <div class="ld-txt" id="ldtxt">Initializing...</div>
+</div>
+
+<!-- PORTFOLIO -->
+<div id="pv">
+
+<nav id="nav">
+  <a href="#hero" class="nav-logo">G<em>.</em>Adel</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="mailto:georgeadelaziz@gmail.com" class="nav-cta">Hire Me</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas class="hero-canvas" id="pc"></canvas>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-badge"><span class="bdot"></span> Available for new projects</div>
+    <h1 class="hero-name">George<br><em>Adel</em></h1>
+    <p class="hero-role">Software Engineer &nbsp;<span>/</span>&nbsp; Full Stack &amp; Secure Systems</p>
+    <p class="hero-bio">Building secure, scalable web and desktop applications — from full-stack platforms to custom POS solutions. Every line of code serves a purpose.</p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-g">View My Work</a>
+      <a href="#contact" class="btn-ghost">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><span>Scroll</span><div class="srod"></div></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="sec">
+  <div class="about-wrap">
+    <div class="reveal">
+      <div class="sec-tag">About Me</div>
+      <h2 class="sec-h">Building systems that<br><em>last & perform</em></h2>
+      <br><br>
+      <p class="atext">I'm a software engineer who believes great software is invisible — it just works. I specialize in the full spectrum: from pixel-perfect frontends to hardened backend architectures and secure desktop applications.</p>
+      <p class="atext">Whether it's a web platform handling real payments, a management system for a school, an e-learning platform with real-time features, or a POS system powering a retail business — I bring the same precision to every layer of the stack.</p>
+      <div class="astats">
+        <div class="astat"><div class="astat-n">4<sub>+</sub></div><div class="astat-l">Projects Shipped</div></div>
+        <div class="astat"><div class="astat-n">3<sub>+</sub></div><div class="astat-l">Years Coding</div></div>
+        <div class="astat"><div class="astat-n">8<sub>+</sub></div><div class="astat-l">Technologies</div></div>
+      </div>
+    </div>
+    <div class="skills-side reveal">
+      <div class="sg"><div class="sg-label">Frontend</div><div class="chips"><span class="chip">React</span><span class="chip">JavaScript</span><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">Framer Motion</span></div></div>
+      <div class="sg"><div class="sg-label">Backend</div><div class="chips"><span class="chip">Node.js</span><span class="chip">Express</span><span class="chip">Python</span><span class="chip">Flask</span></div></div>
+      <div class="sg"><div class="sg-label">Databases</div><div class="chips"><span class="chip">MongoDB</span><span class="chip">SQLite</span><span class="chip">SQLAlchemy</span></div></div>
+      <div class="sg"><div class="sg-label">Desktop & GUI</div><div class="chips"><span class="chip">PyQt5/6</span><span class="chip">Tkinter</span><span class="chip">PyInstaller</span></div></div>
+      <div class="sg"><div class="sg-label">Security & Auth</div><div class="chips"><span class="chip">JWT</span><span class="chip">bcrypt</span><span class="chip">Helmet</span><span class="chip">Rate Limiting</span></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- PROJECTS -->
+<section id="projects" class="sec">
+  <div class="proj-intro reveal">
+    <div class="sec-tag">Selected Work</div>
+    <h2 class="sec-h">Four projects.<br><em>Real impact.</em></h2>
+    <p>Each project solved a real problem — built end-to-end with full responsibility over architecture, UI, and deployment.</p>
+  </div>
+  <div class="proj-list">
+    <div class="proj-row reveal" onclick="openCase(0)">
+      <div class="proj-num">01</div>
+      <div>
+        <div class="proj-type">Desktop Application · POS System</div>
+        <div class="proj-name">La Julie POS System</div>
+        <div class="proj-desc">A fully offline desktop Point of Sale system with product management, sales tracking, multi-role staff access, barcode generation, PDF invoices, and Excel reports.</div>
+        <div class="proj-tags"><span class="ptag">Python</span><span class="ptag">PyQt6</span><span class="ptag">SQLite</span><span class="ptag">fpdf2</span><span class="ptag">openpyxl</span><span class="ptag">Matplotlib</span></div>
+      </div>
+      <button class="proj-action">Case Study <span class="arr">→</span></button>
+    </div>
+    <div class="proj-row reveal" onclick="openCase(1)">
+      <div class="proj-num">02</div>
+      <div>
+        <div class="proj-type">Web Application · E-Commerce</div>
+        <div class="proj-name">La Julie E-Commerce</div>
+        <div class="proj-desc">A full-stack e-commerce platform with Stripe payments, admin dashboard, product & order management, and a smooth animated shopping experience.</div>
+        <div class="proj-tags"><span class="ptag">React 19</span><span class="ptag">Node.js</span><span class="ptag">MongoDB</span><span class="ptag">Stripe</span><span class="ptag">JWT</span><span class="ptag">Framer Motion</span></div>
+      </div>
+      <button class="proj-action">Case Study <span class="arr">→</span></button>
+    </div>
+    <div class="proj-row reveal" onclick="openCase(2)">
+      <div class="proj-num">03</div>
+      <div>
+        <div class="proj-type">Web Application · Management System</div>
+        <div class="proj-name">SPS School Management</div>
+        <div class="proj-desc">A web-based school management system handling students, staff, attendance, grades, and finance — with role-based access for directors, administrators, and supervisors.</div>
+        <div class="proj-tags"><span class="ptag">HTML/CSS/JS</span><span class="ptag">Node.js</span><span class="ptag">SQLite</span><span class="ptag">JWT</span><span class="ptag">Express</span></div>
+      </div>
+      <button class="proj-action">Case Study <span class="arr">→</span></button>
+    </div>
+    <div class="proj-row reveal" onclick="openCase(3)">
+      <div class="proj-num">04</div>
+      <div>
+        <div class="proj-type">Web Application · E-Learning Platform</div>
+        <div class="proj-name">Mr. Hany Math Platform</div>
+        <div class="proj-desc">A full-stack e-learning platform with courses, video lessons, exams, a question bank, real-time notifications, and dashboards for students, teachers, parents, and admins.</div>
+        <div class="proj-tags"><span class="ptag">React 18</span><span class="ptag">Python</span><span class="ptag">Flask</span><span class="ptag">SocketIO</span><span class="ptag">SQLite</span><span class="ptag">Recharts</span></div>
+      </div>
+      <button class="proj-action">Case Study <span class="arr">→</span></button>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- CONTACT -->
+<section id="contact" class="sec">
+  <div class="reveal">
+    <div class="sec-tag">Contact</div>
+    <h2 class="contact-h">Let's build<br>something <em>great</em></h2>
+  </div>
+  <div class="contact-list reveal">
+    <a href="mailto:georgeadelaziz@gmail.com" class="crow">
+      <div class="crow-left"><span class="crow-platform">Email</span><span class="crow-val">georgeadelaziz@gmail.com</span></div>
+      <span class="crow-arr">→</span>
+    </a>
+    <a href="https://github.com/zozz0" target="_blank" class="crow">
+      <div class="crow-left"><span class="crow-platform">GitHub</span><span class="crow-val">github.com/zozz0</span></div>
+      <span class="crow-arr">→</span>
+    </a>
+    <a href="https://www.linkedin.com/in/george-adel-09b97a304/" target="_blank" class="crow">
+      <div class="crow-left"><span class="crow-platform">LinkedIn</span><span class="crow-val">george-adel-09b97a304</span></div>
+      <span class="crow-arr">→</span>
+    </a>
+    <a href="tel:+201507591817" class="crow">
+      <div class="crow-left"><span class="crow-platform">Phone</span><span class="crow-val">+20 150 759 1817</span></div>
+      <span class="crow-arr">→</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">George Adel</div>
+  <div class="footer-copy">© 2025 — All rights reserved</div>
+</footer>
+
+</div><!-- end pv -->
+
+<!-- CASE STUDY OVERLAY -->
+<div id="case-ov">
+  <div class="case-in" id="case-content"></div>
+</div>
+
+<script>
+// ── LOGO BASE64 (La Julie) ──
+const LJ = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAACXBIWXMAAAsTAAALEwEAmpwYAAAF8WlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDUgNzkuMTYzNDk5LCAyMDE4LzA4LzEzLTE2OjQwOjIyICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyI+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+nhEPWQAAHdFJREFUeNrtnXm8HVWV73/rnHNz783NTQgJIYQkEAIBAiEBwhRACEMiMghIEARREBBQQECGBmSmhUGGRqE"; // abbreviated for space - real logo embedded via URL
+
+// ── CASE DATA ──
+const cases = [
+  {
+    tag:'Desktop Application · POS System',
+    title:'La Julie<br><em>POS System</em>',
+    year:'2024', type:'Offline Desktop App', role:'Solo Developer', platform:'Windows (.exe)',
+    hasLogo:true,
+    overview:'La Julie POS is a fully offline, enterprise-grade Point of Sale system built from scratch for retail businesses. The system handles everything a physical store needs — product inventory with barcodes, professional PDF invoice printing, detailed Excel reports, and visual sales analytics — all without requiring an internet connection.',
+    challenge:'The core challenge was building a desktop application that feels as fluid and modern as a web app, while being completely offline and packagable as a standalone .exe file. No installation headaches, no internet dependency — just launch and work.',
+    tech:[
+      {layer:'Language & UI',val:'Python 3 + PyQt6'},
+      {layer:'Database',val:'SQLite (WAL mode — high performance)'},
+      {layer:'Excel Reports',val:'openpyxl'},
+      {layer:'PDF Invoices',val:'fpdf2'},
+      {layer:'Sales Charts',val:'Matplotlib'},
+      {layer:'Barcodes & QR',val:'python-barcode · qrcode'},
+      {layer:'Image Processing',val:'Pillow (PIL)'},
+      {layer:'Hardware',val:'pyserial — thermal printer support'},
+      {layer:'Packaging',val:'PyInstaller → standalone .exe'},
+    ],
+    highlights:[
+      {icon:'🧾',title:'PDF Invoice Printing',desc:'Professional invoices generated instantly and sent to thermal printers via serial port connection.'},
+      {icon:'📊',title:'Sales Analytics Dashboard',desc:'Matplotlib-powered visual charts showing sales trends, top products, and daily/monthly revenue.'},
+      {icon:'👥',title:'Multi-Role Access System',desc:'Separate permission levels for managers, cashiers, and stock controllers with audit logs.'},
+      {icon:'📦',title:'Barcode & QR Generation',desc:'Auto-generated barcodes and QR codes for every product, scannable by any standard reader.'},
+    ]
+  },
+  {
+    tag:'Web Application · E-Commerce',
+    title:'La Julie<br><em>E-Commerce</em>',
+    year:'2024', type:'Full-Stack Web App', role:'Solo Developer', platform:'Web Browser',
+    hasLogo:true,
+    overview:'A production-ready full-stack e-commerce platform built for La Julie. Customers can browse a curated product catalog, manage their cart, and checkout securely via Stripe. The admin dashboard provides full control over products, orders, promotional banners, and sales analytics.',
+    challenge:'Integrating a seamless Stripe payment flow with webhook handling, securing all API endpoints with rate limiting and Helmet security headers, and building a powerful admin dashboard — all while keeping the UI polished and animated with Framer Motion.',
+    tech:[
+      {layer:'Frontend',val:'React 19 · React Router · Framer Motion · Chart.js'},
+      {layer:'Backend',val:'Node.js · Express 5'},
+      {layer:'Database',val:'MongoDB + Mongoose'},
+      {layer:'Authentication',val:'JWT · bcryptjs'},
+      {layer:'Payments',val:'Stripe (with webhook handling)'},
+      {layer:'File Upload',val:'Multer'},
+      {layer:'Security',val:'Helmet · express-rate-limit'},
+      {layer:'Build Tool',val:'Vite'},
+    ],
+    highlights:[
+      {icon:'💳',title:'Stripe Payment Integration',desc:'Full checkout flow with Stripe, including webhook handling for reliable payment confirmation and order processing.'},
+      {icon:'🛡️',title:'Hardened API Security',desc:'Helmet security headers, JWT authentication, bcrypt password hashing, and rate limiting on all endpoints.'},
+      {icon:'🖥️',title:'Admin Dashboard',desc:'Full product, order, and banner management with sales charts powered by Chart.js.'},
+      {icon:'✨',title:'Animated Shopping Experience',desc:'Framer Motion powered page transitions and micro-interactions that make the browsing experience feel premium.'},
+    ]
+  },
+  {
+    tag:'Web Application · Management System',
+    title:'SPS School<br><em>Management</em>',
+    year:'2024', type:'Full-Stack Web App', role:'Solo Developer', platform:'Web Browser',
+    hasLogo:false,
+    overview:'A comprehensive web-based school management system built for Salam Prep. Secondary Schools in Assiut. The platform centralizes all school operations — student records, staff management, daily attendance, grade tracking, and financials — under one roof with strict role-based access control for 4 different user types.',
+    challenge:'Building a complete management system with no bundler that runs directly in the browser, using SQLite via sql.js for zero-install server deployment, while implementing a robust JWT role system covering directors, administrators, accounts, and supervisors — each with different data access scopes.',
+    tech:[
+      {layer:'Frontend',val:'HTML · CSS · JavaScript (Single Page)'},
+      {layer:'Backend',val:'Node.js · Express 4'},
+      {layer:'Database',val:'SQLite via sql.js (zero install needed)'},
+      {layer:'Authentication',val:'JWT (role-based access control)'},
+      {layer:'Build Tool',val:'No bundler — runs directly in browser'},
+      {layer:'User Roles',val:'Director · Admin · Accounts · Supervisor'},
+    ],
+    highlights:[
+      {icon:'🎓',title:'Complete Student Records',desc:'Full student profiles with grades, attendance history, behavioral notes, and parent contact details.'},
+      {icon:'🔐',title:'4-Level Role System',desc:'Directors see everything. Supervisors only see their assigned classes. Accounts only see financials.'},
+      {icon:'💰',title:'Finance & Fees Module',desc:'Track school fees, payment status, and generate financial summary reports per student or class.'},
+      {icon:'📅',title:'Attendance Tracking',desc:'Daily attendance logging with absence alerts and monthly attendance summary reports per student.'},
+    ]
+  },
+  {
+    tag:'Web Application · E-Learning Platform',
+    title:'Mr. Hany<br><em>Math Platform</em>',
+    year:'2024', type:'Full-Stack Web App', role:'Solo Developer', platform:'Web Browser',
+    hasLogo:false,
+    overview:"A feature-rich e-learning platform purpose-built for a math tutor's business. The system supports four distinct user roles — students, teachers, parents, and admins — each with tailored dashboards. Features include structured video courses, interactive exams, a question bank, real-time notifications, progress analytics, and a community feed.",
+    challenge:'Coordinating real-time features using Flask-SocketIO with Eventlet alongside a complex multi-role system, while building a reactive React frontend using Zustand for global state management and Recharts for rich progress visualization dashboards.',
+    tech:[
+      {layer:'Frontend',val:'React 18 · React Router · Zustand · Framer Motion · Recharts'},
+      {layer:'Backend',val:'Python · Flask · Flask-SocketIO'},
+      {layer:'Database',val:'SQLite via SQLAlchemy ORM'},
+      {layer:'Authentication',val:'JWT (flask-jwt-extended)'},
+      {layer:'Real-Time',val:'Flask-SocketIO + Eventlet'},
+      {layer:'File Handling',val:'Pillow (image processing) · Multer'},
+      {layer:'Build Tool',val:'Vite'},
+    ],
+    highlights:[
+      {icon:'📹',title:'Structured Video Courses',desc:'Course system with chapter organization, video lessons, and per-student progress tracking.'},
+      {icon:'📝',title:'Exam & Question Bank',desc:'Teachers build custom exams from a shared question bank. Results are auto-graded and displayed instantly.'},
+      {icon:'⚡',title:'Real-Time Notifications',desc:'Flask-SocketIO pushes live notifications to students and parents for new content, grades, and messages.'},
+      {icon:'📈',title:'Progress Analytics',desc:'Recharts dashboards visualizing student performance trends, exam score history, and engagement metrics.'},
+    ]
+  }
+];
+
+// ── OPEN CASE ──
+function openCase(i) {
+  const c = cases[i];
+  const ov = document.getElementById('case-ov');
+  const ct = document.getElementById('case-content');
+
+  const logoHTML = c.hasLogo
+    ? `<div class="case-logo"><img src="/mnt/user-data/uploads/logo.png" alt="La Julie Logo" onerror="this.parentElement.style.display='none'"></div>`
+    : '';
+
+  const techRows = c.tech.map(t=>`<div class="tech-cell"><div class="tech-layer">${t.layer}</div><div class="tech-val">${t.val}</div></div>`).join('');
+  const hls = c.highlights.map(h=>`<div class="hl-cell"><div class="hl-icon">${h.icon}</div><div class="hl-title">${h.title}</div><div class="hl-desc">${h.desc}</div></div>`).join('');
+
+  ct.innerHTML = `
+    <button class="case-back" onclick="closeCase()">← Back to Work</button>
+    <div class="case-htag">${c.tag}</div>
+    <h1 class="case-title">${c.title}</h1>
+    <div class="case-meta">
+      <div><div class="cm-label">Year</div><div class="cm-val">${c.year}</div></div>
+      <div><div class="cm-label">Type</div><div class="cm-val">${c.type}</div></div>
+      <div><div class="cm-label">Role</div><div class="cm-val">${c.role}</div></div>
+      <div><div class="cm-label">Platform</div><div class="cm-val">${c.platform}</div></div>
+    </div>
+    ${logoHTML}
+    <h2 class="case-sh">Project <em>Overview</em></h2>
+    <p class="case-p">${c.overview}</p>
+    <h2 class="case-sh">The <em>Challenge</em></h2>
+    <p class="case-p">${c.challenge}</p>
+    <h2 class="case-sh">Tech <em>Stack</em></h2>
+    <div class="tech-grid">${techRows}</div>
+    <h2 class="case-sh">Key <em>Features</em></h2>
+    <div class="hl-grid">${hls}</div>
+  `;
+
+  ov.classList.add('open');
+  ov.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCase() {
+  document.getElementById('case-ov').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeCase(); });
+
+// ── CURSOR ──
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+});
+(function ar(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ar)})();
+document.querySelectorAll('a,button,.proj-row,.chip,nav').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hov'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hov'));
+});
+
+// ── LOADER ──
+const name = 'George Adel.';
+const ldname = document.getElementById('ldname');
+name.split('').forEach((ch,i)=>{
+  const s = document.createElement('span');
+  s.className = 'ld-ch' + (ch==='.'?' ld-dot':'');
+  s.textContent = ch===' '?'\u00a0':ch;
+  s.style.animationDelay = (i*0.07)+'s';
+  ldname.appendChild(s);
+});
+const msgs = ['Initializing...','Loading assets...','Compiling modules...','Almost ready...','Welcome.'];
+const ldbar = document.getElementById('ldbar');
+const ldtxt = document.getElementById('ldtxt');
+let prog=0, mi=0;
+const lt = setInterval(()=>{
+  prog += Math.random()*22+6;
+  if(prog>100) prog=100;
+  ldbar.style.width = Math.min(prog,100)+'%';
+  ldtxt.textContent = msgs[Math.min(mi++, msgs.length-1)];
+  if(prog>=100){
+    clearInterval(lt);
+    ldtxt.textContent='Welcome.';
+    setTimeout(()=>{
+      document.getElementById('loader').classList.add('gone');
+      document.getElementById('pv').classList.add('vis');
+    }, 700);
+  }
+},300);
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('sc', window.scrollY>60);
+});
+
+// ── REVEAL ──
+const ro = new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{ if(e.isIntersecting) setTimeout(()=>e.target.classList.add('vis'),i*100); });
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+// ── PARTICLES ──
+const canvas=document.getElementById('pc');
+const ctx=canvas.getContext('2d');
+let W,H,pts=[];
+function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;}
+resize(); window.addEventListener('resize',resize);
+for(let i=0;i<90;i++) pts.push({x:Math.random()*1920,y:Math.random()*1080,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.3+.3,a:Math.random()*.35+.05});
+(function ap(){
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+    if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(201,170,113,${p.a})`;ctx.fill();
+  });
+  for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
+    const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<110){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(201,170,113,${.07*(1-d/110)})`;ctx.lineWidth=.5;ctx.stroke();}
+  }
+  requestAnimationFrame(ap);
+})();
+</script>
+</body>
+</html>
